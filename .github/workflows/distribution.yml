@@ -1,0 +1,86 @@
+name: Build, test and release Android
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-distribution
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile APK and bundle
+        env:
+          KEY_DATA: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEY_ALIAS: upload
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEYPASS }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_KEYPASS }}
+        run: |
+          set -euo pipefail
+          export ANDROID_KEYFILE="$RUNNER_TEMP/upload.p12"
+          trap 'rm -f "$ANDROID_KEYFILE"' EXIT
+          printf '%s' "$KEY_DATA" | base64 -d > "$ANDROID_KEYFILE"
+          chmod +x gradlew
+          ./gradlew --no-daemon --max-workers=2 :app:assembleRelease :app:bundleRelease
+          mkdir -p delivery/evidence
+          cp app/build/outputs/apk/release/*.apk delivery/wave-lines-android.apk
+          cp app/build/outputs/bundle/release/*.aab delivery/wave-lines-android.aab
+          tool=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
+          "$tool" verify --verbose --print-certs delivery/wave-lines-android.apk > delivery/evidence/apk-signature.txt
+          jarsigner -verify delivery/wave-lines-android.aab
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install signed APK and test application
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          script: python3 distribution/device_test.py
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: device-evidence
+          path: delivery/evidence
+      - name: Assemble downloads
+        run: |
+          cd delivery
+          sha256sum *.apk *.aab > SHA256SUMS
+          cp ../distribution/install-qr.png .
+          tar czf device-evidence.tar.gz evidence
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: distribution
+          path: |
+            delivery/*.apk
+            delivery/*.aab
+            delivery/*.png
+            delivery/*.tar.gz
+            delivery/SHA256SUMS
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: distribution
+          path: delivery
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "android-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" delivery/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WaveLinesWallpaper 1.13.7 · Android" --notes "Independent build of [WaveLinesWallpaper 1.13.7](https://github.com/markusfisch/WaveLinesWallpaper/releases/tag/1.13.7). Download **wave-lines-android.apk** to install. The AAB, checksums and emulator evidence are also attached. [Build and test log]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+
