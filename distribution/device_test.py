@@ -87,6 +87,7 @@ try:
     shell('wm','dismiss-keyguard')
     adb('logcat','-c')
     launch()
+    find('add_theme', timeout=50)
     capture('01-launch')
     exercise()
     capture('02-workflow')
