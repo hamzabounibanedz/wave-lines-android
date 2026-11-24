@@ -6,7 +6,7 @@ import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-PACKAGE = 'de.markusfisch.android.wavelines'
+PACKAGE = 'io.github.hamzabounibanedz.wavelines'
 EVIDENCE = Path('delivery/evidence')
 EVIDENCE.mkdir(parents=True, exist_ok=True)
 checks = []
@@ -34,7 +34,14 @@ def find(value, timeout=25):
     deadline=time.monotonic()+timeout
     while time.monotonic()<deadline:
         try:
-            for node in screen():
+            nodes=screen()
+            if any(node.get('text')=="Pixel Launcher isn't responding" for node in nodes):
+                close=next(node for node in nodes if node.get('resource-id')=='android:id/aerr_close')
+                x1,y1,x2,y2=map(int,re.findall(r'\d+',close.get('bounds')))
+                shell('input','tap',str((x1+x2)//2),str((y1+y2)//2))
+                time.sleep(1)
+                continue
+            for node in nodes:
                 a=node.attrib
                 if value in (a.get('text'),a.get('content-desc'),a.get('resource-id'),a.get('resource-id','').split('/')[-1]):
                     return a

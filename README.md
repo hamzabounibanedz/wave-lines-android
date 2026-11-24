@@ -7,7 +7,7 @@ Customizable animated wave wallpapers. This independently signed edition builds 
 
 ![Scan for the Android installation page](distribution/install-qr.png)
 
-Download the APK on your phone and open it. Android may ask you to allow the download source to install apps. The package uses its original Android identifier and an independent signing certificate. An existing installation signed by another distributor cannot receive this APK as an in-place update.
+Download the APK on your phone and open it. Android may ask you to allow the download source to install apps. This edition uses its own Android package ID, `io.github.hamzabounibanedz.wavelines`, and signing certificate. It can be installed alongside the original app. GitHub Actions assigns an increasing Android version code to each new build.
 
 Run **Actions → Build, test and release Android → Run workflow** to compile, sign, install and test on a hosted Android emulator, and publish a new release. The release includes the APK, AAB, SHA-256 checksums, installation QR and device evidence. Repository signing secrets are ANDROID_KEYSTORE and ANDROID_KEYPASS. No backend or login is required.
 
