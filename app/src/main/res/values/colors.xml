@@ -1,9 +1,9 @@
 <resources>
-	<color name="primary">#222</color>
-	<color name="primary_dark">#111</color>
-	<color name="accent">#fff</color>
-	<color name="background_colors">#222</color>
-	<color name="background_progress">#8000</color>
-	<color name="ic_launcher_background">#0090d0</color>
-	<color name="preview_border">#111</color>
+	<color name="primary">#103e48</color>
+	<color name="primary_dark">#062c35</color>
+	<color name="accent">#8aebd4</color>
+	<color name="background_colors">#15404b</color>
+	<color name="background_progress">#ae133e44</color>
+	<color name="ic_launcher_background">#0b3d4b</color>
+	<color name="preview_border">#164b55</color>
 </resources>

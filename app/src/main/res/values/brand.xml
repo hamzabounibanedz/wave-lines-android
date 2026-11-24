@@ -1,0 +1,5 @@
+<resources>
+  <color name="brand_base">#0b3d4b</color>
+  <color name="brand_accent">#86e9dd</color>
+  <string name="brand_wordmark" translatable="false">Tideglass</string>
+</resources>

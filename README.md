@@ -1,9 +1,11 @@
 <!-- independent-distribution -->
-# WaveLinesWallpaper for Android
+# Tideglass for Android
 
-Customizable animated wave wallpapers. This independently signed edition builds the [original 1.13.7 release](https://github.com/markusfisch/WaveLinesWallpaper/tree/b65e2cdef3884aece57c5cb84963d38663693415) from source. The upstream name, license and application features are preserved.
+Customizable animated wave wallpapers. This independently signed edition builds the [original 1.13.7 release](https://github.com/markusfisch/WaveLinesWallpaper/tree/b65e2cdef3884aece57c5cb84963d38663693415) from source. This edition adds a new native identity and a browser companion. Upstream attribution and licensing are included.
 
 [Download APK and AAB](https://github.com/hamzabounibanedz/wave-lines-android/releases/latest) · [Cloud build and emulator results](https://github.com/hamzabounibanedz/wave-lines-android/actions/workflows/distribution.yml)
+
+[Web companion](https://tideglass-waves.vercel.app) · [Install on Android](https://tideglass-waves.vercel.app/install)
 
 ![Scan for the Android installation page](distribution/install-qr.png)
 

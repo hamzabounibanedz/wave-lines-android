@@ -7,7 +7,7 @@
 	android:fitsSystemWindows="true">
 	<include layout="@layout/toolbar"/>
 	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/themes"
+		android:id="@+id/themes" android:padding="8dp"
 		android:scrollbars="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

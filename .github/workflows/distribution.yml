@@ -82,5 +82,5 @@ jobs:
       - env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "android-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" delivery/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "WaveLinesWallpaper 1.13.7 · Android" --notes "Independent build of [WaveLinesWallpaper 1.13.7](https://github.com/markusfisch/WaveLinesWallpaper/releases/tag/1.13.7). Download **wave-lines-android.apk** to install. The AAB, checksums and emulator evidence are also attached. [Build and test log]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+          gh release create "android-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" delivery/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Tideglass · Android" --notes "Independent build of [WaveLinesWallpaper 1.13.7](https://github.com/markusfisch/WaveLinesWallpaper/releases/tag/1.13.7). Download **wave-lines-android.apk** to install. The AAB, checksums and emulator evidence are also attached. [Build and test log]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
 
